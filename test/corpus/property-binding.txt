@@ -579,3 +579,31 @@ NgStyle with complex calculation
                         (string)))))))))))
     (end_tag
       (tag_name))))
+
+==================
+Multiple semicolon separated expressions
+==================
+
+<button (click)="$event.preventDefault(); doSomething();"></button>
+
+---
+
+(document
+  (element
+    (start_tag
+      (tag_name)
+      (attribute
+        (event_binding
+          (binding_name
+            (identifier))
+          (expression
+            (member_expression
+              object: (identifier)
+              call: (call_expression
+                function: (identifier))))
+          (expression
+            (call_expression
+              function: (identifier))))))
+    (end_tag
+      (tag_name))))
+

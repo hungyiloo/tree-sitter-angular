@@ -2210,7 +2210,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "_binding_assignment"
+          "name": "_binding_assignment_multiple"
         }
       ]
     },
@@ -2292,6 +2292,82 @@
                 {
                   "type": "SYMBOL",
                   "name": "assignment_expression"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_double_quote"
+        }
+      ]
+    },
+    "_binding_assignment_multiple": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "="
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_double_quote"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "_any_expression"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "assignment_expression"
+                    }
+                  ]
+                },
+                {
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": ";"
+                      },
+                      {
+                        "type": "CHOICE",
+                        "members": [
+                          {
+                            "type": "CHOICE",
+                            "members": [
+                              {
+                                "type": "SYMBOL",
+                                "name": "_any_expression"
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "assignment_expression"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "BLANK"
+                          }
+                        ]
+                      }
+                    ]
+                  }
                 }
               ]
             },

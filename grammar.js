@@ -377,7 +377,7 @@ module.exports = grammar(HTML, {
 
     // ---------- Bindings ----------
     property_binding: ($) => seq('[', $.binding_name, ']', $._binding_assignment),
-    event_binding: ($) => seq('(', $.binding_name, ')', $._binding_assignment),
+    event_binding: ($) => seq('(', $.binding_name, ')', $._binding_assignment_multiple),
     two_way_binding: ($) => seq('[(', $.binding_name, ')]', $._binding_assignment),
     animation_binding: ($) =>
       seq('[@', $.binding_name, ']', optional(field('trigger', $._binding_assignment))),
@@ -387,6 +387,14 @@ module.exports = grammar(HTML, {
         '=',
         $._double_quote,
         optional(choice($._any_expression, $.assignment_expression)),
+        $._double_quote,
+      ),
+
+    _binding_assignment_multiple: ($) =>
+      seq(
+        '=',
+        $._double_quote,
+        optional(seq(choice($._any_expression, $.assignment_expression), repeat(seq(';', optional(choice($._any_expression, $.assignment_expression)))))),
         $._double_quote,
       ),
 
