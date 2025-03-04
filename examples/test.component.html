@@ -84,3 +84,7 @@
 <button (click)="$event.preventDefault(); doSomething()"></button>
 
 <div *ngIf="!!some.property"></div>
+
+<div *ngIf="someProperty ? one + two : three + four"></div>
+
+<div *ngIf="someProperty ? (one | async) : three | async"></div>

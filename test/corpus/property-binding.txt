@@ -469,6 +469,77 @@ Nested ternary expression
       (tag_name))))
 
 ==================
+Ternary expression with calculations
+==================
+
+<span [property]="condition ? a + b : a - b"></span>
+
+---
+
+(document
+  (element
+    (start_tag
+      (tag_name)
+      (attribute
+        (property_binding
+          (binding_name
+            (identifier))
+          (ternary_expression
+            (expression
+              (identifier))
+            (ternary_operator)
+            (binary_expression
+              (expression
+                (identifier))
+              (expression
+                (identifier)))
+            (ternary_operator)
+            (binary_expression
+              (expression
+                (identifier))
+              (expression
+                (identifier)))))))
+    (end_tag
+      (tag_name))))
+
+==================
+Ternary expression with pipes
+==================
+
+<span [property]="condition ? (a$ | async) : b$ | async"></span>
+
+---
+
+(document
+  (element
+    (start_tag
+      (tag_name)
+      (attribute
+        (property_binding
+          (binding_name
+            (identifier))
+          (ternary_expression
+            (expression
+              (identifier))
+            (ternary_operator)
+            (group
+              (expression
+                (identifier)
+                  (pipe_sequence
+                    (pipe_operator)
+                    (pipe_call
+                      (identifier)))))
+          (ternary_operator)
+            (expression
+              (identifier)
+              (pipe_sequence
+                (pipe_operator)
+                (pipe_call
+                (identifier))))))))
+    (end_tag
+      (tag_name))))
+
+==================
 NgStyle simple
 ==================
 

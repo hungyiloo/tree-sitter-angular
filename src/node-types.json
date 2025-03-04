@@ -2833,6 +2833,10 @@
             "named": true
           },
           {
+            "type": "binary_expression",
+            "named": true
+          },
+          {
             "type": "bracket_expression",
             "named": true
           },

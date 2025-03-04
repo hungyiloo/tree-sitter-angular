@@ -432,7 +432,7 @@ module.exports = grammar(HTML, {
         seq(
           field('condition', $._any_expression),
           alias('?', $.ternary_operator),
-          field('consequence', choice($.group, $._primitive)),
+          field('consequence', choice($.group, $._primitive, $.binary_expression)),
           alias(':', $.ternary_operator),
           field('alternative', choice($.group, $._any_expression)),
         ),
@@ -469,9 +469,9 @@ module.exports = grammar(HTML, {
     pipe_sequence: ($) => repeat1(seq(alias('|', $.pipe_operator), $.pipe_call)),
 
     pipe_call: ($) =>
-      seq(field('name', $.identifier), optional(field('arguments', $.pipe_arguments))),
+      prec.left(seq(field('name', $.identifier), optional(field('arguments', $.pipe_arguments)))),
 
-    pipe_arguments: ($) => repeat1($._pipe_argument),
+    pipe_arguments: ($) => prec.left(repeat1($._pipe_argument)),
     _pipe_argument: ($) => seq(':', $._primitive),
 
     // ---------- Primitives ----------
