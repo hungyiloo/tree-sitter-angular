@@ -228,6 +228,33 @@ Event binding expression
             (expression
               (identifier))))))))
 
+========================
+Event binding with mutiple expressions
+========================
+
+<element (click)="handle($event); $event.preventDefault()"/>
+
+---
+
+(document
+  (element
+    (self_closing_tag
+      (tag_name)
+      (attribute
+        (event_binding
+          (binding_name
+            (identifier))
+          (expression
+            (call_expression
+              (identifier)
+              (arguments
+                (identifier))))
+          (expression
+            (member_expression
+              (identifier)
+              (call_expression
+                (identifier)))))))))
+
 =================
 Regular attribute
 =================
@@ -651,32 +678,6 @@ NgStyle with complex calculation
     (end_tag
       (tag_name))))
 
-==================
-Multiple semicolon separated expressions
-==================
-
-<button (click)="$event.preventDefault(); doSomething();"></button>
-
----
-
-(document
-  (element
-    (start_tag
-      (tag_name)
-      (attribute
-        (event_binding
-          (binding_name
-            (identifier))
-          (expression
-            (member_expression
-              object: (identifier)
-              call: (call_expression
-                function: (identifier))))
-          (expression
-            (call_expression
-              function: (identifier))))))
-    (end_tag
-      (tag_name))))
 
 ==================
 Chained unary operator
@@ -702,3 +703,22 @@ Chained unary operator
                     (identifier)))))))
     (end_tag
       (tag_name))))
+
+================
+Escaped string expression
+================
+
+<element [property]="'value\'s value'"/>
+
+---
+
+(document
+  (element
+    (self_closing_tag
+      (tag_name)
+      (attribute
+        (property_binding
+          (binding_name
+            (identifier))
+          (expression
+            (string)))))))

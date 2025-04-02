@@ -36,7 +36,7 @@ module.exports = grammar(HTML, {
 
     // ---------- Overrides ----------
     attribute_name: (_) => /[^<>\*.\[\]\(\)"'=\s]+/,
-    text: (_) => /[^<>{}&\s]([^<>{}&]*[^<>{}&\s])?/,
+    text: (_) => /[^<>@{}&\s]([^<>@{}&]*[^<>@{}&\s])?/,
 
     // ----------- Statement block --------
     statement_block: ($) => prec.right(seq('{', repeat($._node), '}')),
@@ -267,6 +267,7 @@ module.exports = grammar(HTML, {
         $.expression,
         $.ternary_expression,
         $.nullish_coalescing_expression,
+        $.template_string,
         prec(3, $.conditional_expression),
       ),
 
@@ -387,6 +388,7 @@ module.exports = grammar(HTML, {
         '=',
         $._double_quote,
         optional(choice($._any_expression, $.assignment_expression)),
+        repeat(seq(';', optional(choice($._any_expression, $.assignment_expression)))),
         $._double_quote,
       ),
 
@@ -407,6 +409,18 @@ module.exports = grammar(HTML, {
       ),
 
     // ---------- Expressions ---------
+    // untagged template literal
+    template_string: ($) =>
+      seq(
+        $._backtick,
+        repeat(choice($.template_chars, $.template_substitution)),
+        $._backtick,
+      ),
+
+    template_chars: ($) => token.immediate(prec(1, /(?:[^$`\\]+|\\.)+/)),
+
+    template_substitution: ($) => seq('${', $._any_expression, '}'),
+
     // Expression
     expression: ($) => seq($._primitive, optional(field('pipes', $.pipe_sequence))),
 
@@ -513,8 +527,31 @@ module.exports = grammar(HTML, {
     // String
     string: ($) =>
       choice(
-        seq($._double_quote, repeat(token.immediate(/[^"]/)), $._double_quote),
-        seq($._single_quote, repeat(token.immediate(/[^']/)), $._single_quote),
+        seq(
+          $._double_quote,
+          repeat(choice(token.immediate(/[^"]/), $._escape_sequence)),
+          $._double_quote,
+        ),
+        seq(
+          $._single_quote,
+          repeat(choice(token.immediate(/[^']/), $._escape_sequence)),
+          $._single_quote,
+        ),
+      ),
+
+    _escape_sequence: (_) =>
+      token.immediate(
+        seq(
+          '\\',
+          choice(
+            /[^xu0-7]/,
+            /[0-7]{1,3}/,
+            /x[0-9a-fA-F]{2}/,
+            /u[0-9a-fA-F]{4}/,
+            /u\{[0-9a-fA-F]+\}/,
+            /[\r?][\n\u2028\u2029]/,
+          ),
+        ),
       ),
 
     // Number
@@ -568,6 +605,7 @@ module.exports = grammar(HTML, {
 
     // ---------- Base ----------
     _closing_bracket: (_) => token(prec(-1, '}')),
+    _backtick: () => '`',
     // eslint-disable-next-line quotes
     _single_quote: () => "'",
     _double_quote: () => '"',
